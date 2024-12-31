@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "149490927280",
+    "project_id": "wellfree-c9af5",
+    "storage_bucket": "wellfree-c9af5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:149490927280:android:39730ecdc27aa4314c5d75",
+        "android_client_info": {
+          "package_name": "uk.ac.tees.mad.FreeWell.S3178808"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "149490927280-49l15pfe51fptmhaugn27rk7o0hmhvoo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "uk.ac.tees.mad.FreeWell.S3178808",
+            "certificate_hash": "4dded7732f361d9cc4f69289a30d458a2fa1470d"
+          }
+        },
+        {
+          "client_id": "149490927280-1lm100guneforb83dpdfq95k1kog2ain.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBl9XF-57fE8k-dooFbaZqNA9aK7m7cnDo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "149490927280-1lm100guneforb83dpdfq95k1kog2ain.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
