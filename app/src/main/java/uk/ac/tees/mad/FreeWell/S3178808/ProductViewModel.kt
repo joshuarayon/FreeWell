@@ -25,7 +25,26 @@ class ProductViewModel : ViewModel() {
             location = "Predefined",
             imageResourceId = R.drawable.cycle,
             uploadedBy = "Giri"
+        ),
+        Product(
+            name = "Onions",
+            location = "Predefined",
+            imageResourceId = R.drawable.onion,
+            uploadedBy = "Mugilan"
+        ),
+        Product(
+            name = "Jacket",
+            location = "Predefined",
+            imageResourceId = R.drawable.jacket,
+            uploadedBy = "Hari"
+        ),
+        Product(
+            name = "Gloves",
+            location = "Predefined",
+            imageResourceId = R.drawable.golves,
+            uploadedBy = "Jai"
         )
+
     )
 
     init {

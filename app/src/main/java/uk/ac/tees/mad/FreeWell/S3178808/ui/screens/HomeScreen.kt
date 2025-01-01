@@ -1,4 +1,6 @@
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -10,7 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,6 +24,7 @@ import coil.compose.rememberImagePainter
 import uk.ac.tees.mad.FreeWell.S3178808.Product
 import uk.ac.tees.mad.FreeWell.S3178808.ProductViewModel
 import uk.ac.tees.mad.FreeWell.S3178808.R
+import androidx.compose.material.icons.filled.Search
 
 @Composable
 fun HomeScreen(
@@ -37,8 +40,22 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text("Home") },
                 actions = {
+                    // Modified Profile Icon
                     IconButton(onClick = onProfileClicked) {
-                        Icon(Icons.Default.AccountCircle, contentDescription = "Profile")
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp) // Larger size for the icon
+                                .clip(RoundedCornerShape(50))
+                                .background(MaterialTheme.colors.primary.copy(alpha = 0.2f))
+                                .padding(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AccountCircle,
+                                contentDescription = "Profile",
+                                tint = MaterialTheme.colors.onPrimary,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
                     }
                 }
             )
@@ -46,7 +63,7 @@ fun HomeScreen(
         bottomBar = {
             BottomNavigationBar(
                 onPostClicked = onPostClicked,
-                onMessageListClicked = onMessageListClicked // Updated to navigate to MessageListScreen
+                onMessageListClicked = onMessageListClicked
             )
         }
     ) { paddingValues ->
@@ -55,10 +72,11 @@ fun HomeScreen(
                 .padding(paddingValues)
                 .padding(8.dp)
         ) {
-            Text(
-                text = "Caring is Sharing!!!",
-                fontSize = 24.sp,
-                modifier = Modifier.padding(8.dp)
+            StyledSearchBar(
+                placeholderText = "Search products...",
+                onSearch = { query ->
+                    // Handle search action here, e.g., filter products
+                }
             )
 
             // Combined Grid for Products
@@ -66,6 +84,72 @@ fun HomeScreen(
         }
     }
 }
+
+
+
+@Composable
+fun StyledSearchBar(
+    placeholderText: String,
+    onSearch: (String) -> Unit
+) {
+    var searchQuery by remember { mutableStateOf("") }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .clip(RoundedCornerShape(28.dp))
+                .background(MaterialTheme.colors.surface)
+                .border(
+                    width = 1.dp,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.5f),
+                    shape = RoundedCornerShape(28.dp)
+                )
+                .padding(horizontal = 8.dp)
+        ) {
+            // Search Icon
+            Icon(
+                imageVector = Icons.Default.Search,
+                contentDescription = "Search Icon",
+                tint = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+                modifier = Modifier.padding(start = 8.dp)
+            )
+
+            // Search TextField
+            TextField(
+                value = searchQuery,
+                onValueChange = { query -> searchQuery = query },
+                placeholder = { Text(placeholderText) },
+                singleLine = true,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 8.dp),
+                colors = TextFieldDefaults.textFieldColors(
+                    backgroundColor = MaterialTheme.colors.surface,
+                    focusedIndicatorColor = MaterialTheme.colors.surface,
+                    unfocusedIndicatorColor = MaterialTheme.colors.surface,
+                    textColor = MaterialTheme.colors.onSurface
+                )
+            )
+
+            // "GO" Button
+            Button(
+                onClick = { onSearch(searchQuery) },
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier.padding(end = 8.dp)
+            ) {
+                Text("GO")
+            }
+        }
+    }
+}
+
 
 @Composable
 fun CombinedProductGrid(
@@ -128,20 +212,51 @@ fun ProductItem(product: Product, onClick: () -> Unit) {
 @Composable
 fun BottomNavigationBar(
     onPostClicked: () -> Unit,
-    onMessageListClicked: () -> Unit // New callback for navigating to the message list
+    onMessageListClicked: () -> Unit
 ) {
-    BottomNavigation(elevation = 8.dp) {
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colors.primary,
+        elevation = 10.dp
+    ) {
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.AddCircle, contentDescription = "Post") },
-            label = { Text("Post") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.AddCircle,
+                    contentDescription = "Post",
+                    tint = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier
+                        .size(36.dp) // Larger icon size
+                )
+            },
+            label = {
+                Text(
+                    "Post",
+                    style = MaterialTheme.typography.body1, // Larger text style
+                    color = MaterialTheme.colors.onPrimary
+                )
+            },
             selected = false,
             onClick = onPostClicked
         )
         BottomNavigationItem(
-            icon = { Icon(Icons.Default.Email, contentDescription = "Messages") },
-            label = { Text("Messages") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Email,
+                    contentDescription = "Messages",
+                    tint = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier
+                        .size(36.dp) // Larger icon size
+                )
+            },
+            label = {
+                Text(
+                    "Messages",
+                    style = MaterialTheme.typography.body1, // Larger text style
+                    color = MaterialTheme.colors.onPrimary
+                )
+            },
             selected = false,
-            onClick = onMessageListClicked // Updated callback
+            onClick = onMessageListClicked
         )
     }
 }

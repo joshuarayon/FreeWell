@@ -25,7 +25,12 @@ fun ProfileScreen(
     val auth = FirebaseAuth.getInstance()
     val currentUser = auth.currentUser
     val userName = currentUser?.displayName ?: "User"
+    val userEmail = currentUser?.email ?: "Email not available"
     val profileImageUrl = currentUser?.photoUrl
+
+    // Example values for received and given products
+    val totalProductsReceived = 50
+    val totalProductsGiven = 35
 
     Scaffold(
         topBar = {
@@ -78,6 +83,33 @@ fun ProfileScreen(
                     text = "Hi, $userName!",
                     fontSize = 24.sp,
                     textAlign = TextAlign.Center
+                )
+
+                // Email Text
+                Text(
+                    text = userEmail,
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Product Stats
+                Text(
+                    text = "Total Products Received: $totalProductsReceived",
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+                Text(
+                    text = "Total Products Given: $totalProductsGiven",
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colors.onSurface.copy(alpha = 0.7f),
+                    modifier = Modifier.padding(top = 4.dp)
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))

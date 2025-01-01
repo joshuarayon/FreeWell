@@ -9,14 +9,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.wear.compose.material.Button
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -60,7 +69,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
 fun LocationAwareContent(
     navController: NavHostController,
@@ -69,25 +77,33 @@ fun LocationAwareContent(
     googleSignInClient: GoogleSignInClient
 ) {
     var locationEnabled by remember { mutableStateOf(false) }
-    val context = LocalContext.current // Access LocalContext in a @Composable context
+    val context = LocalContext.current
 
+    // Location Permission Request
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
             val locationManager = context.getSystemService(LocationManager::class.java)
-            val isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                    || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-
-            locationEnabled = isLocationEnabled
+            locationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                    locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
         } else {
             locationEnabled = false
         }
     }
 
-    // Trigger permission request using LaunchedEffect
-    LaunchedEffect(Unit) {
+    // Check and Request Permission Each Time
+    DisposableEffect(Unit) {
+        val locationManager = context.getSystemService(LocationManager::class.java)
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+            !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+        ) {
+            locationEnabled = false
+        }
+
         requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+
+        onDispose { /* Cleanup if needed */ }
     }
 
     if (locationEnabled) {
@@ -101,12 +117,24 @@ fun LocationAwareContent(
         EnableLocationPrompt()
     }
 }
-
 @Composable
 private fun EnableLocationPrompt() {
-    // UI prompt for user to enable location services
-    Text("Please enable location services to proceed.")
+    val context = LocalContext.current
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Text("Please enable location services to proceed.")
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(onClick = {
+            context.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
+        }) {
+            Text("Enable Location")
+        }
+    }
 }
+
 
 @Composable
 fun AppNavigation(

@@ -3,6 +3,7 @@ package uk.ac.tees.mad.FreeWell.S3178808.ui.screens
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
+import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -33,13 +34,23 @@ fun PostScreen(
     var productName by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var isDialogOpen by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
-    val imagePickerLauncher = rememberLauncherForActivityResult(
+
+    val galleryLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             selectedImageUri = result.data?.data
+        }
+    }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap ->
+        if (bitmap != null) {
+            selectedImageUri = Uri.parse(MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Captured Image", null))
         }
     }
 
@@ -48,8 +59,23 @@ fun PostScreen(
             TopAppBar(
                 title = { Text("Post") },
                 actions = {
-                    IconButton(onClick = onSignOut) {
-                        Icon(Icons.Default.AccountCircle, contentDescription = "Profile")
+                    Box(
+                        modifier = Modifier
+                            .size(48.dp) // Increased size of the profile icon
+                            .background(
+                                color = MaterialTheme.colors.primary,
+                                shape = CircleShape
+                            )
+                            .clickable { onSignOut() }
+                            .padding(8.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = "Profile",
+                            tint = MaterialTheme.colors.onPrimary,
+                            modifier = Modifier.size(32.dp) // Increased icon size
+                        )
                     }
                 }
             )
@@ -70,15 +96,10 @@ fun PostScreen(
                     modifier = Modifier
                         .size(150.dp)
                         .background(Color.LightGray, shape = CircleShape)
-                        .clickable {
-                            val intent = Intent(Intent.ACTION_PICK)
-                            intent.type = "image/*"
-                            imagePickerLauncher.launch(intent)
-                        },
+                        .clickable { isDialogOpen = true },
                     contentAlignment = Alignment.Center
                 ) {
                     if (selectedImageUri != null) {
-                        // Show the selected image
                         Image(
                             painter = rememberImagePainter(data = selectedImageUri),
                             contentDescription = "Selected Image",
@@ -86,7 +107,6 @@ fun PostScreen(
                             contentScale = ContentScale.Crop
                         )
                     } else {
-                        // Show placeholder image
                         Image(
                             painter = painterResource(id = R.drawable.placeholder), // Placeholder image resource
                             contentDescription = "Placeholder Image",
@@ -126,6 +146,44 @@ fun PostScreen(
                     Text("Submit")
                 }
             }
+        }
+
+        if (isDialogOpen) {
+            AlertDialog(
+                onDismissRequest = { isDialogOpen = false },
+                title = { Text("Choose Image Source") },
+                buttons = {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Button(
+                            onClick = {
+                                isDialogOpen = false
+                                val intent = Intent(Intent.ACTION_PICK)
+                                intent.type = "image/*"
+                                galleryLauncher.launch(intent)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Open Gallery")
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Button(
+                            onClick = {
+                                isDialogOpen = false
+                                cameraLauncher.launch(null)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Open Camera")
+                        }
+                    }
+                }
+            )
         }
     }
 }
