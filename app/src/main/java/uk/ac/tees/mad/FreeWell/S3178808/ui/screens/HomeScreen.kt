@@ -35,6 +35,8 @@ fun HomeScreen(
     onProfileClicked: () -> Unit,
     onProductClicked: (Product) -> Unit
 ) {
+    var filteredProducts by remember { mutableStateOf(productViewModel.productList) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -75,17 +77,21 @@ fun HomeScreen(
             StyledSearchBar(
                 placeholderText = "Search products...",
                 onSearch = { query ->
-                    // Handle search action here, e.g., filter products
+                    filteredProducts = if (query.isBlank()) {
+                        productViewModel.productList
+                    } else {
+                        productViewModel.productList.filter { product ->
+                            product.name.contains(query, ignoreCase = true)
+                        }
+                    }
                 }
             )
 
             // Combined Grid for Products
-            CombinedProductGrid(productViewModel, onProductClicked)
+            CombinedProductGrid(filteredProducts, onProductClicked)
         }
     }
 }
-
-
 
 @Composable
 fun StyledSearchBar(
@@ -150,14 +156,11 @@ fun StyledSearchBar(
     }
 }
 
-
 @Composable
 fun CombinedProductGrid(
-    productViewModel: ProductViewModel,
+    products: List<Product>,
     onProductClicked: (Product) -> Unit
 ) {
-    val products = productViewModel.productList
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         contentPadding = PaddingValues(8.dp),

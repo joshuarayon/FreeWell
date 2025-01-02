@@ -6,8 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,13 +29,7 @@ fun MessageScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Chat with $userName") },
-                actions = {
-                    // Sign Out Button
-                    IconButton(onClick = onSignOut) {
-                        Icon(Icons.Default.AccountCircle, contentDescription = "Sign Out")
-                    }
-                }
+                title = { Text("Chat with $userName") }
             )
         },
         bottomBar = {
@@ -61,6 +53,21 @@ fun MessageScreen(
                         if (newMessage.isNotBlank()) {
                             // Add new message to list
                             messages = messages + ChatMessage("You", newMessage)
+
+                            // Check for specific input to generate bot reply
+                            if (newMessage.equals("hi can i get this please", ignoreCase = true)) {
+                                messages = messages + ChatMessage(
+                                    sender = "Bot",
+                                    message = "Yeah sure, the pickup point is at 6:00 pm. You can get it."
+                                )
+                            }
+                            if (newMessage.equals("thanks", ignoreCase = true)) {
+                                messages = messages + ChatMessage(
+                                    sender = "Bot",
+                                    message = "No Problem."
+                                )
+                            }
+
                             newMessage = ""
                         }
                     },

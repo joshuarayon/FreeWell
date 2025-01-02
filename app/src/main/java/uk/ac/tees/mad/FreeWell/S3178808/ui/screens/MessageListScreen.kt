@@ -25,7 +25,7 @@ fun MessageListScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            val users = listOf("Mike", "Amy", "Giri")
+            val users = listOf("Mike", "Amy", "Giri","Jai","Hari")
 
             for (user in users) {
                 Card(
