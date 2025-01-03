@@ -15,7 +15,7 @@ fun MessageListScreen(
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Users") })
+            TopAppBar(title = { Text("Chat") })
         }
     ) { paddingValues ->
         Column(

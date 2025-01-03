@@ -164,27 +164,44 @@ fun AppNavigation(
             )
         }
 
-        // Sign-In Screen
         composable(Screen.SignIn.route) {
-            var signInState by remember { mutableStateOf<SignInState>(SignInState.Idle) }
-
             SignInScreen(
+                signInState = SignInState.Idle,
+                onSignInSuccess = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.SignIn.route) { inclusive = true }
+                    }
+                },
+                onSignInError = { errorMsg ->
+                    // Handle error (e.g., show a Toast)
+                },
                 googleSignInClient = googleSignInClient,
                 firebaseAuthWithGoogle = { idToken, callback ->
                     firebaseAuthWithGoogle(auth, idToken, callback)
                 },
-                signInState = signInState,
-                onSignInError = { errorMsg ->
-                    signInState = SignInState.Error(errorMsg)
-                },
-                onSignInSuccess = {
-                    signInState = SignInState.Success
-                    navController.navigate(Screen.Home.route) {
-                        popUpTo(Screen.SignIn.route) { inclusive = true }
-                    }
+                firebaseAuth = auth,
+                onSignUpClick = {
+                    navController.navigate(Screen.SignUp.route)
                 }
             )
         }
+
+        composable(Screen.SignUp.route) {
+            SignUpScreen(
+                onSignUpSuccess = {
+                    // After sign-up completes, navigate to Sign-In
+                    navController.navigate(Screen.SignIn.route) {
+                        // Clear the stack so back button won't return here
+                        popUpTo(Screen.SignUp.route) { inclusive = true }
+                    }
+                },
+                onSignUpError = { errorMsg ->
+                    // Optionally show a Toast/Snackbar or log the error
+                },
+                firebaseAuth = auth
+            )
+        }
+
 
         // Home Screen
         composable(Screen.Home.route) {

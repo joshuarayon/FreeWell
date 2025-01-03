@@ -4,10 +4,10 @@ import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 
-
 sealed class Screen(val route: String) {
     object Splash : Screen("splash")
     object SignIn : Screen("sign_in")
+    object SignUp : Screen("sign_up") // Add this line for the SignUp screen
     object Home : Screen("home")
     object Post : Screen("post")
 
@@ -29,5 +29,4 @@ sealed class Screen(val route: String) {
             )
     }
     object MessageList : Screen("message_list")
-
 }

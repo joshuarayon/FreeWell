@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.google.firebase.auth.FirebaseAuth
+import uk.ac.tees.mad.FreeWell.S3178808.R
 
 @Composable
 fun ProfileScreen(
@@ -28,7 +29,6 @@ fun ProfileScreen(
     val userEmail = currentUser?.email ?: "Email not available"
     val profileImageUrl = currentUser?.photoUrl
 
-    // Example values for received and given products
     val totalProductsReceived = 50
     val totalProductsGiven = 35
 
@@ -49,38 +49,28 @@ fun ProfileScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(16.dp)
             ) {
-                // Profile Picture
-                if (profileImageUrl != null) {
-                    Image(
-                        painter = rememberImagePainter(data = profileImageUrl),
-                        contentDescription = "Profile Picture",
-                        modifier = Modifier
-                            .size(120.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    // Placeholder for Profile Picture
-                    Box(
-                        modifier = Modifier
-                            .size(120.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colors.onSurface.copy(alpha = 0.2f)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = userName.firstOrNull()?.uppercase() ?: "?",
-                            fontSize = 40.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
+                // Profile Picture with placeholder
+                Image(
+                    painter = rememberImagePainter(
+                        data = profileImageUrl,
+                        builder = {
+                            // If profileImageUrl is null, Coil will use 'placeholder' or 'error'
+                            placeholder(R.drawable.placehold)
+                            error(R.drawable.placehold)
+                        }
+                    ),
+                    contentDescription = "Profile Picture",
+                    modifier = Modifier
+                        .size(120.dp)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
+                )
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Greeting Text
                 Text(
-                    text = "Hi, $userName!",
+                    text = "Hi, $userName",
                     fontSize = 24.sp,
                     textAlign = TextAlign.Center
                 )

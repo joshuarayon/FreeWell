@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
@@ -13,6 +14,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
@@ -22,11 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
 import uk.ac.tees.mad.FreeWell.S3178808.R
 import uk.ac.tees.mad.FreeWell.S3178808.SignInState
+
+
 
 @Composable
 fun SignInScreen(
@@ -34,8 +41,12 @@ fun SignInScreen(
     onSignInSuccess: () -> Unit,
     onSignInError: (String) -> Unit,
     googleSignInClient: GoogleSignInClient,
-    firebaseAuthWithGoogle: (String?, (Boolean, String?) -> Unit) -> Unit
+    firebaseAuthWithGoogle: (String?, (Boolean, String?) -> Unit) -> Unit,
+    firebaseAuth: FirebaseAuth,
+    onSignUpClick: () -> Unit // Add this parameter
 ) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     val authState = remember { mutableStateOf(signInState) }
 
     val launcher = rememberLauncherForActivityResult(
@@ -84,13 +95,30 @@ fun SignInScreen(
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(16.dp)
             ) {
-                when (signInState) {
+                when (val state = authState.value) {
                     is SignInState.Idle -> {
                         SignInContent(
-                            onClick = {
+                            email = email,
+                            onEmailChange = { email = it },
+                            password = password,
+                            onPasswordChange = { password = it },
+                            onSignInClick = {
+                                authState.value = SignInState.Loading
+                                firebaseAuth.signInWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            onSignInSuccess()
+                                        } else {
+                                            onSignInError(task.exception?.message ?: "Sign-In failed.")
+                                            authState.value = SignInState.Idle
+                                        }
+                                    }
+                            },
+                            onGoogleSignInClick = {
                                 authState.value = SignInState.Loading
                                 launcher.launch(googleSignInClient.signInIntent)
-                            }
+                            },
+                            onSignUpClick = onSignUpClick // Pass the callback here
                         )
                     }
                     is SignInState.Loading -> {
@@ -101,16 +129,33 @@ fun SignInScreen(
                     }
                     is SignInState.Error -> {
                         Text(
-                            text = "Error: ${signInState.message}",
+                            text = "Error: ${state.message}",
                             color = MaterialTheme.colors.error,
                             style = MaterialTheme.typography.body1,
                             modifier = Modifier.padding(8.dp)
                         )
                         SignInContent(
-                            onClick = {
+                            email = email,
+                            onEmailChange = { email = it },
+                            password = password,
+                            onPasswordChange = { password = it },
+                            onSignInClick = {
+                                authState.value = SignInState.Loading
+                                firebaseAuth.signInWithEmailAndPassword(email, password)
+                                    .addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            onSignInSuccess()
+                                        } else {
+                                            onSignInError(task.exception?.message ?: "Sign-In failed.")
+                                            authState.value = SignInState.Idle
+                                        }
+                                    }
+                            },
+                            onGoogleSignInClick = {
                                 authState.value = SignInState.Loading
                                 launcher.launch(googleSignInClient.signInIntent)
-                            }
+                            },
+                            onSignUpClick = onSignUpClick // Pass the callback here
                         )
                     }
                     is SignInState.Success -> {
@@ -123,24 +168,30 @@ fun SignInScreen(
 }
 
 @Composable
-fun SignInContent(onClick: () -> Unit) {
+fun SignInContent(
+    email: String,
+    onEmailChange: (String) -> Unit,
+    password: String,
+    onPasswordChange: (String) -> Unit,
+    onSignInClick: () -> Unit,
+    onGoogleSignInClick: () -> Unit,
+    onSignUpClick: () -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Perfect Circle App Icon
         Image(
-            painter = painterResource(id = R.drawable.appicon), // Replace with your app icon resource
+            painter = painterResource(id = R.drawable.appicon),
             contentDescription = "App Icon",
             modifier = Modifier
-                .size(120.dp) // Circle size
-                .clip(RoundedCornerShape(60.dp)) // Ensures perfect circular clipping
-                .aspectRatio(1f, matchHeightConstraintsFirst = true), // Maintains 1:1 aspect ratio
-            contentScale = ContentScale.Crop // Ensures the image fills the circle
+                .size(120.dp)
+                .clip(RoundedCornerShape(60.dp))
+                .aspectRatio(1f, matchHeightConstraintsFirst = true),
+            contentScale = ContentScale.Crop
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Welcome Message
         Text(
             text = "Welcome to Freeoo!",
             style = MaterialTheme.typography.h4,
@@ -148,9 +199,43 @@ fun SignInContent(onClick: () -> Unit) {
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // Google Sign-In Button
+        StyledTextField(
+            value = email,
+            onValueChange = onEmailChange,
+            label = "Email"
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        StyledTextField(
+            value = password,
+            onValueChange = onPasswordChange,
+            label = "Password",
+            isPassword = true
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Button(
-            onClick = onClick,
+            onClick = onSignInClick,
+            colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
+            shape = RoundedCornerShape(24.dp),
+            elevation = ButtonDefaults.elevation(8.dp),
+            modifier = Modifier
+                .height(56.dp)
+                .fillMaxWidth(0.8f)
+        ) {
+            Text(
+                text = "Sign In",
+                color = MaterialTheme.colors.onPrimary,
+                style = MaterialTheme.typography.button
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = onGoogleSignInClick,
             colors = ButtonDefaults.buttonColors(backgroundColor = MaterialTheme.colors.primary),
             shape = RoundedCornerShape(24.dp),
             elevation = ButtonDefaults.elevation(8.dp),
@@ -164,7 +249,7 @@ fun SignInContent(onClick: () -> Unit) {
                 modifier = Modifier.fillMaxSize()
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.google), // Replace with your Google logo
+                    painter = painterResource(id = R.drawable.google),
                     contentDescription = "Google Logo",
                     modifier = Modifier.size(24.dp)
                 )
@@ -176,5 +261,74 @@ fun SignInContent(onClick: () -> Unit) {
                 )
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Adding "OR" line
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .padding(vertical = 8.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(1.dp)
+                    .background(MaterialTheme.colors.onSurface.copy(alpha = 0.5f))
+            )
+            Text(
+                text = "OR",
+                style = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onSurface),
+                modifier = Modifier.padding(horizontal = 8.dp)
+            )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .height(1.dp)
+                    .background(MaterialTheme.colors.onSurface.copy(alpha = 0.5f))
+            )
+        }
+
+        // Adding "Don't have an account? Register" as a clickable text
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                text = "Don't have an account? ",
+                style = MaterialTheme.typography.body2.copy(color = MaterialTheme.colors.onSurface)
+            )
+            Text(
+                text = "Register",
+                style = MaterialTheme.typography.body2.copy(
+                    color = MaterialTheme.colors.primary,
+                    textDecoration = TextDecoration.Underline
+                ),
+                modifier = Modifier.clickable(onClick = onSignUpClick)
+            )
+        }
     }
+}
+
+
+@Composable
+fun StyledTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    isPassword: Boolean = false
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        singleLine = true,
+        modifier = Modifier
+            .fillMaxWidth(0.8f)
+            .height(56.dp),
+        shape = RoundedCornerShape(12.dp),
+        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
+    )
 }
