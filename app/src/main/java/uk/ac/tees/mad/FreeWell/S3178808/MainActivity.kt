@@ -287,8 +287,43 @@ fun AppNavigation(
         }
 
         composable(Screen.Settings.route) {
-            SettingsScreen(onNavigateBack = { navController.popBackStack() })
+            SettingsScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onProfileClick = { navController.navigate(Screen.Profile.route) },
+                onResetPasswordClick = { navController.navigate(Screen.ResetPassword.route) },
+                onDeleteAccountClick = { navController.navigate(Screen.DeleteAccount.route) },
+                onFAQsClick = { navController.navigate(Screen.FAQs.route) },
+                onContactUsClick = { navController.navigate(Screen.ContactUs.route) },
+                onPrivacyPolicyClick = { navController.navigate(Screen.PrivacyPolicy.route) },
+                onTermsOfServiceClick = { navController.navigate(Screen.TermsOfService.route) }
+            )
         }
+
+        composable(Screen.ResetPassword.route) {
+            ResetPasswordScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable(Screen.DeleteAccount.route) {
+            DeleteAccountScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable(Screen.FAQs.route) {
+            FAQsScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable(Screen.ContactUs.route) {
+            ContactUsScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable(Screen.PrivacyPolicy.route) {
+            PrivacyPolicyScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+        composable(Screen.TermsOfService.route) {
+            TermsOfServiceScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
+
 
     }
 }

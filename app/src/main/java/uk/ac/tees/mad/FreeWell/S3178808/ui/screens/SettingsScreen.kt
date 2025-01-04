@@ -14,7 +14,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun SettingsScreen(onNavigateBack: () -> Unit) {
+fun SettingsScreen(
+    onNavigateBack: () -> Unit,
+    onProfileClick: () -> Unit,
+    onResetPasswordClick: () -> Unit,
+    onDeleteAccountClick: () -> Unit,
+    onFAQsClick: () -> Unit,
+    onContactUsClick: () -> Unit,
+    onPrivacyPolicyClick: () -> Unit,
+    onTermsOfServiceClick: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -46,39 +55,39 @@ fun SettingsScreen(onNavigateBack: () -> Unit) {
             SettingsCard(
                 label = "View Account Profile",
                 icon = Icons.Default.AccountCircle,
-                onClick = { /* Handle action */ }
+                onClick = onProfileClick // Navigate to Profile Page
             )
             SettingsCard(
                 label = "Reset Password",
                 icon = Icons.Default.Lock,
-                onClick = { /* Handle action */ }
+                onClick = onResetPasswordClick // Navigate to Reset Password Page
             )
             SettingsCard(
                 label = "Delete Account",
                 icon = Icons.Default.Delete,
-                onClick = { /* Handle action */ }
+                onClick = onDeleteAccountClick // Navigate to Delete Account Page
             )
             Divider(color = Color.Gray, thickness = 1.dp)
             SettingsCard(
                 label = "FAQs",
                 icon = Icons.Default.Info,
-                onClick = { /* Handle action */ }
+                onClick = onFAQsClick // Navigate to FAQs Page
             )
             SettingsCard(
                 label = "Contact Us",
                 icon = Icons.Default.Email,
-                onClick = { /* Handle action */ }
+                onClick = onContactUsClick // Navigate to Contact Us Page
             )
             Divider(color = Color.Gray, thickness = 1.dp)
             SettingsCard(
                 label = "Privacy Policy",
                 icon = Icons.Default.Lock,
-                onClick = { /* Handle action */ }
+                onClick = onPrivacyPolicyClick // Navigate to Privacy Policy Page
             )
             SettingsCard(
                 label = "Terms of Service",
                 icon = Icons.Default.AccountBox,
-                onClick = { /* Handle action */ }
+                onClick = onTermsOfServiceClick // Navigate to Terms of Service Page
             )
         }
     }

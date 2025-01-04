@@ -29,5 +29,11 @@ sealed class Screen(val route: String) {
             )
     }
     object MessageList : Screen("message_list")
+    object ResetPassword : Screen("reset_password")
+    object DeleteAccount : Screen("delete_account")
+    object FAQs : Screen("faqs")
+    object ContactUs : Screen("contact_us")
+    object PrivacyPolicy : Screen("privacy_policy")
+    object TermsOfService : Screen("terms_of_service")
     object Settings : Screen("settings")
 }
