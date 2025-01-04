@@ -25,7 +25,7 @@ import uk.ac.tees.mad.FreeWell.S3178808.Product
 import uk.ac.tees.mad.FreeWell.S3178808.ProductViewModel
 import uk.ac.tees.mad.FreeWell.S3178808.R
 import androidx.compose.material.icons.filled.Search
-
+import androidx.compose.material.icons.filled.Settings
 @Composable
 fun HomeScreen(
     productViewModel: ProductViewModel, // ViewModel for uploaded products
@@ -33,6 +33,7 @@ fun HomeScreen(
     onPostClicked: () -> Unit,
     onMessageListClicked: () -> Unit, // Navigate to MessageListScreen
     onProfileClicked: () -> Unit,
+    onSettingsClicked: () -> Unit, // Add type annotation here
     onProductClicked: (Product) -> Unit
 ) {
     var filteredProducts by remember { mutableStateOf(productViewModel.productList) }
@@ -42,22 +43,11 @@ fun HomeScreen(
             TopAppBar(
                 title = { Text("Home") },
                 actions = {
-                    // Modified Profile Icon
                     IconButton(onClick = onProfileClicked) {
-                        Box(
-                            modifier = Modifier
-                                .size(48.dp) // Larger size for the icon
-                                .clip(RoundedCornerShape(50))
-                                .background(MaterialTheme.colors.primary.copy(alpha = 0.2f))
-                                .padding(8.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.AccountCircle,
-                                contentDescription = "Profile",
-                                tint = MaterialTheme.colors.onPrimary,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Default.AccountCircle,
+                            contentDescription = "Profile"
+                        )
                     }
                 }
             )
@@ -65,7 +55,8 @@ fun HomeScreen(
         bottomBar = {
             BottomNavigationBar(
                 onPostClicked = onPostClicked,
-                onMessageListClicked = onMessageListClicked
+                onMessageListClicked = onMessageListClicked,
+                onSettingsClicked = onSettingsClicked // Pass the parameter here
             )
         }
     ) { paddingValues ->
@@ -86,12 +77,11 @@ fun HomeScreen(
                     }
                 }
             )
-
-            // Combined Grid for Products
             CombinedProductGrid(filteredProducts, onProductClicked)
         }
     }
 }
+
 
 @Composable
 fun StyledSearchBar(
@@ -215,7 +205,8 @@ fun ProductItem(product: Product, onClick: () -> Unit) {
 @Composable
 fun BottomNavigationBar(
     onPostClicked: () -> Unit,
-    onMessageListClicked: () -> Unit
+    onMessageListClicked: () -> Unit,
+    onSettingsClicked: () -> Unit // New callback for Settings
 ) {
     BottomNavigation(
         backgroundColor = MaterialTheme.colors.primary,
@@ -227,39 +218,59 @@ fun BottomNavigationBar(
                     imageVector = Icons.Default.AddCircle,
                     contentDescription = "Post",
                     tint = MaterialTheme.colors.onPrimary,
-                    modifier = Modifier
-                        .size(36.dp) // Larger icon size
+                    modifier = Modifier.size(36.dp)
                 )
             },
             label = {
                 Text(
                     "Post",
-                    style = MaterialTheme.typography.body1, // Larger text style
+                    style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.onPrimary
                 )
             },
             selected = false,
             onClick = onPostClicked
         )
+
         BottomNavigationItem(
             icon = {
                 Icon(
                     imageVector = Icons.Default.Email,
                     contentDescription = "Messages",
                     tint = MaterialTheme.colors.onPrimary,
-                    modifier = Modifier
-                        .size(36.dp) // Larger icon size
+                    modifier = Modifier.size(36.dp)
                 )
             },
             label = {
                 Text(
                     "Messages",
-                    style = MaterialTheme.typography.body1, // Larger text style
+                    style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.onPrimary
                 )
             },
             selected = false,
             onClick = onMessageListClicked
+        )
+
+        // New Settings Button
+        BottomNavigationItem(
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings",
+                    tint = MaterialTheme.colors.onPrimary,
+                    modifier = Modifier.size(36.dp)
+                )
+            },
+            label = {
+                Text(
+                    "Settings",
+                    style = MaterialTheme.typography.body1,
+                    color = MaterialTheme.colors.onPrimary
+                )
+            },
+            selected = false,
+            onClick = onSettingsClicked
         )
     }
 }

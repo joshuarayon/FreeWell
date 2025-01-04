@@ -1,6 +1,7 @@
 package uk.ac.tees.mad.FreeWell.S3178808
 
 import HomeScreen
+import SettingsScreen
 import android.content.Intent
 import android.location.LocationManager
 import android.os.Bundle
@@ -211,11 +212,13 @@ fun AppNavigation(
                 onPostClicked = { navController.navigate(Screen.Post.route) },
                 onMessageListClicked = { navController.navigate(Screen.MessageList.route) },
                 onProfileClicked = { navController.navigate(Screen.Profile.route) },
+                onSettingsClicked = { navController.navigate(Screen.Settings.route) }, // Add this line
                 onProductClicked = { product ->
                     navController.navigate(Screen.ProductDetails.createRoute(product.name, product.uploadedBy))
                 }
             )
         }
+
 
         // Product Details Screen
         composable(
@@ -282,6 +285,11 @@ fun AppNavigation(
         composable(Screen.Profile.route) {
             ProfileScreen(onSignOut = { signOut(auth, googleSignInClient, navController) })
         }
+
+        composable(Screen.Settings.route) {
+            SettingsScreen(onNavigateBack = { navController.popBackStack() })
+        }
+
     }
 }
 

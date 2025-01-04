@@ -29,4 +29,5 @@ sealed class Screen(val route: String) {
             )
     }
     object MessageList : Screen("message_list")
+    object Settings : Screen("settings")
 }
