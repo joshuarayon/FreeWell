@@ -300,7 +300,13 @@ fun AppNavigation(
         }
 
         composable(Screen.ResetPassword.route) {
-            ResetPasswordScreen(onNavigateBack = { navController.popBackStack() })
+            var email by remember { mutableStateOf("") } // Holds the email input
+
+            ResetPasswordScreen(
+                onNavigateBack = { navController.popBackStack() },
+                email = email,
+                onEmailChange = { newEmail -> email = newEmail } // Updates the email value
+            )
         }
 
         composable(Screen.DeleteAccount.route) {

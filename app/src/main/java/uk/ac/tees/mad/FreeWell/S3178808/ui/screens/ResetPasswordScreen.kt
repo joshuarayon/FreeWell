@@ -11,7 +11,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -23,7 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ResetPasswordScreen(onNavigateBack: () -> Unit) {
+fun ResetPasswordScreen(onNavigateBack: () -> Unit,
+                        email: String,
+                        onEmailChange: (String) -> Unit
+)
+{
     Scaffold(
         topBar = {
             TopAppBar(
@@ -48,7 +51,12 @@ fun ResetPasswordScreen(onNavigateBack: () -> Unit) {
         ) {
             Text(text = "Enter your email to reset your password", fontSize = 16.sp)
             Spacer(modifier = Modifier.height(16.dp))
-            TextField(value = "", onValueChange = {}, label = { Text("Email") })
+            StyledTextField(
+                value = email,
+                onValueChange = onEmailChange,
+                label = "Password",
+                isPassword = true
+            )
             Spacer(modifier = Modifier.height(16.dp))
             Button(onClick = { /* Handle Reset Password Action */ }) {
                 Text("Submit")

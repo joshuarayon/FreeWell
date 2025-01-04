@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 
 
 
+
 @Composable
 fun FAQsScreen(onNavigateBack: () -> Unit) {
     Scaffold(

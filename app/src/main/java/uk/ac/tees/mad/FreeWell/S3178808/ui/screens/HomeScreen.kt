@@ -46,7 +46,9 @@ fun HomeScreen(
                     IconButton(onClick = onProfileClicked) {
                         Icon(
                             imageVector = Icons.Default.AccountCircle,
-                            contentDescription = "Profile"
+                            contentDescription = "Profile",
+                            tint = MaterialTheme.colors.onPrimary,
+                            modifier = Modifier.size(32.dp)
                         )
                     }
                 }
