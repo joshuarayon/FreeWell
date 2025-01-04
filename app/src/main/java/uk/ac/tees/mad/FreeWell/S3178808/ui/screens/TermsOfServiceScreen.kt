@@ -48,11 +48,49 @@ fun TermsOfServiceScreen(onNavigateBack: () -> Unit) {
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(text = "Terms of Service", fontSize = 18.sp, color = Color(0xFF6200EE))
-            Divider()
-            Text("1. You must not misuse our services.")
-            Text("2. We are not liable for any data loss.")
-            Text("3. Contact us for further clarification.")
+            Text(text = "Terms of Service", fontSize = 20.sp, color = Color(0xFF6200EE))
+            Divider(color = Color.Gray)
+
+            // Term 1
+            Text("1. Use of Services", fontSize = 16.sp, color = Color.Black)
+            Text(
+                "You agree to use our services only for lawful purposes and in compliance with " +
+                        "all applicable laws and regulations."
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Term 2
+            Text("2. Account Responsibilities", fontSize = 16.sp, color = Color.Black)
+            Text(
+                "You are responsible for maintaining the confidentiality of your account information. " +
+                        "Any activity conducted under your account is your responsibility."
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Term 3
+            Text("3. Service Availability", fontSize = 16.sp, color = Color.Black)
+            Text(
+                "We strive to keep our services available at all times but do not guarantee uninterrupted " +
+                        "access. Downtime may occur due to maintenance or unforeseen issues."
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Term 4
+            Text("4. Prohibited Activities", fontSize = 16.sp, color = Color.Black)
+            Text(
+                "You must not engage in activities such as hacking, spamming, or distributing malicious content " +
+                        "that could harm the app, its users, or third parties."
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Term 5
+            Text("5. Limitation of Liability", fontSize = 16.sp, color = Color.Black)
+            Text(
+                "We are not liable for any indirect, incidental, or consequential damages arising from your " +
+                        "use of the app or services."
+            )
+
         }
     }
 }
+

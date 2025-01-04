@@ -58,6 +58,33 @@ fun FAQsScreen(onNavigateBack: () -> Unit) {
             Spacer(modifier = Modifier.height(8.dp))
             Text("Q2: How do I contact support?")
             Text("A: Use the Contact Us page to reach out to us.")
+            Spacer(modifier = Modifier.height(8.dp))
+            // FAQ 3
+            Text("Q3: How do I delete my account?", fontSize = 16.sp, color = Color.Black)
+            Text("A: Navigate to the Delete Account page and confirm your decision.", fontSize = 14.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // FAQ 4
+            Text("Q4: Can I update my profile information?", fontSize = 16.sp, color = Color.Black)
+            Text("A: Yes, you can update your profile on the View Account Profile page.", fontSize = 14.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // FAQ 5
+            Text("Q5: Is my data secure?", fontSize = 16.sp, color = Color.Black)
+            Text("A: Yes, your data is protected, and we adhere to strict privacy policies.", fontSize = 14.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // FAQ 6
+            Text("Q6: How can I report a bug or issue?", fontSize = 16.sp, color = Color.Black)
+            Text("A: Use the Contact Us page to report bugs or issues you encounter.", fontSize = 14.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // FAQ 7
+            Text("Q7: Can I retrieve a deleted account?", fontSize = 16.sp, color = Color.Black)
+            Text("A: Unfortunately, once deleted, accounts cannot be restored.", fontSize = 14.sp)
+            Spacer(modifier = Modifier.height(8.dp))
+
+
         }
     }
 }

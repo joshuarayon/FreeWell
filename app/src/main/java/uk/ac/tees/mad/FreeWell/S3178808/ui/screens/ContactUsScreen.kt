@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 
-
 @Composable
 fun ContactUsScreen(onNavigateBack: () -> Unit) {
     Scaffold(
@@ -48,13 +47,56 @@ fun ContactUsScreen(onNavigateBack: () -> Unit) {
                 .padding(padding)
                 .padding(16.dp)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalAlignment = Alignment.Start
         ) {
-            Text(text = "Reach out to us at:", fontSize = 16.sp)
+            // Section Title
+            Text(text = "Reach out to us", fontSize = 20.sp, color = Color(0xFF6200EE))
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "Email: support@example.com", fontSize = 14.sp)
-            Text(text = "Phone: +1 234 567 890", fontSize = 14.sp)
+
+            // Email
+            Text(text = "Email:", fontSize = 16.sp, color = Color.Black)
+            Text(text = "freeooapp@example.com", fontSize = 14.sp, color = Color.Gray)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Phone
+            Text(text = "Phone:", fontSize = 16.sp, color = Color.Black)
+            Text(text = "+1 234 567 890", fontSize = 14.sp, color = Color.Gray)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Office Address
+            Text(text = "Office Address:", fontSize = 16.sp, color = Color.Black)
+            Text(
+                text = "FreeWell App\n123 Innovation Lane\nTech City, TX 75001, USA",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Social Media
+            Text(text = "Follow us on social media:", fontSize = 16.sp, color = Color.Black)
+            Text(text = "Facebook: facebook.com/FreeWellApp", fontSize = 14.sp, color = Color.Gray)
+            Text(text = "Twitter: twitter.com/FreeWellApp", fontSize = 14.sp, color = Color.Gray)
+            Text(text = "Instagram: instagram.com/FreeWellApp", fontSize = 14.sp, color = Color.Gray)
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Support Hours
+            Text(text = "Support Hours:", fontSize = 16.sp, color = Color.Black)
+            Text(
+                text = "Monday - Friday: 9:00 AM - 6:00 PM (CST)\n" +
+                        "Saturday: 10:00 AM - 4:00 PM (CST)",
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Additional Help
+            Text(
+                text = "If you have any questions or concerns, feel free to reach out through the channels above. " +
+                        "We’re here to help!",
+                fontSize = 14.sp,
+                color = Color.Black
+            )
         }
     }
 }
